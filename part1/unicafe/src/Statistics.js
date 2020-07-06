@@ -6,17 +6,21 @@ const Statistics = ({ data }) => {
     const avgFeedbacks = (data.good - data.bad) / allFeedbacks;
     const positiveFeedbacks = data.good / allFeedbacks;
 
-    return (
-        <div>
-            <h1>statistics</h1>
-            <p>good {data.good}</p>
-            <p>neutral {data.neutral}</p>
-            <p>bad {data.bad}</p>
-            <p>all {allFeedbacks}</p>
-            <p>average {avgFeedbacks}</p>
-            {(!isNaN(positiveFeedbacks)) && <p>positive {positiveFeedbacks}%</p>}
-        </div>
-    )
+    if (allFeedbacks) {
+        return (
+            <div>
+                <h1>statistics</h1>
+                <p>good {data.good}</p>
+                <p>neutral {data.neutral}</p>
+                <p>bad {data.bad}</p>
+                <p>all {allFeedbacks}</p>
+                {(!isNaN(avgFeedbacks)) && <p>average {avgFeedbacks}</p>}
+                {(!isNaN(positiveFeedbacks)) && <p>positive {positiveFeedbacks}%</p>}
+            </div>
+        )
+    } else {
+        return <p>No feedback given</p>
+    }
 }
 
 export default Statistics;
