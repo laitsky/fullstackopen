@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Part = props => (
-    <p>{props.part.name} {props.part.exercises}</p>
+    <p>{props.data.name} {props.data.exercises}</p>
 )
 
 export default Part;
