@@ -6,7 +6,7 @@ const App = () => {
   const [keyword, setKeyword] = useState('');
 
   const handleKeywordChange = e => setKeyword(e.target.value);
-
+  const handleShowBtnClick = country => () => setKeyword(country);
   useEffect(() => {
     axios
       .get('https://restcountries.eu/rest/v2/all')
@@ -36,9 +36,12 @@ const App = () => {
         </div>
       ))
     } else {
-      return countriesFilter.map(c => <div key={c.alpha2Code}>{c.name}</div>)
+      return countriesFilter.map(c => (
+        <div key={c.alpha2Code}>{c.name} <button onClick={handleShowBtnClick(c.name)}>show</button></div>
+      ))
     }
   };
+
 
   return (
     <div>
