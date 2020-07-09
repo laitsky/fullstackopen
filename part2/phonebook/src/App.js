@@ -39,14 +39,18 @@ const App = () => {
             window.alert("You cannot empty the form");
             return;
         }
-        
+
         event.preventDefault();
         const personObject = { name: newName, number: newNumber };
         const duplicateName = persons.some(person => person.name === newName);
         const duplicateNumber = persons.some(person => person.number === newNumber);
 
         if (duplicateName && duplicateNumber) {
-            window.alert(`${newName} is already added to phonebook`);
+            setNotifMessage(`${newName} is already added to phonebook`);
+            setNotifType('error');
+            setTimeout(() => {
+                setNotifMessage(null);
+            }, 5000);
             setNewName('');
             setNewNumber('');
         } else if (duplicateName) {
@@ -58,10 +62,24 @@ const App = () => {
                     .updateNumber(personId, personObject)
                     .then(returnedPerson => {
                         setPersons(persons.map(person => person.id === personId ? { ...person, number: newNumber } : person));
-                        window.alert("Successfully updated the phone number!");
+                        setNotifMessage("Successfully updated the phone number!");
+                        setNotifType('success');
+                        setTimeout(() => {
+                            setNotifMessage(null);
+                        }, 5000);
                         setNewName('');
                         setNewNumber('');
                     })
+                    .catch(err => {
+                        setNotifMessage(`Information of ${newName} has already been removed from server`);
+                        setNotifType('error');
+                        setTimeout(() => {
+                            setNotifMessage(null)
+                        }, 5000);
+                        setPersons(persons.filter(person => person.id !== personId));
+                        setNewName('');
+                        setNewNumber('');
+                    });
             }
         } else {
             personService
