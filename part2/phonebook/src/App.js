@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
@@ -26,7 +25,7 @@ const App = () => {
             personService
                 .deletePerson(id)
                 .then(deleted => {
-                    setPersons(persons.filter(person => person !== id));
+                    setPersons(persons.filter(person => person.id !== id));
                     window.alert(`Successfully deleted ${name}, status ${deleted}`)
                 });
         }
@@ -35,11 +34,27 @@ const App = () => {
     const addPerson = event => {
         event.preventDefault();
         const personObject = { name: newName, number: newNumber };
-        const duplicate = persons.some(person => person.name === newName);
+        const duplicateName = persons.some(person => person.name === newName);
+        const duplicateNumber = persons.some(person => person.number === newNumber);
 
-        if (duplicate) {
+        if (duplicateName && duplicateNumber) {
             window.alert(`${newName} is already added to phonebook`);
             setNewName('');
+            setNewNumber('');
+        } else if (duplicateName) {
+            const personId = persons.find(person => person.name === newName).id;
+            const result = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`);
+
+            if (result) {
+                personService
+                    .updateNumber(personId, personObject)
+                    .then(returnedPerson => {
+                        setPersons(persons.map(person => person.id === personId ? { ...person, number: newNumber } : person));
+                        window.alert("Successfully updated the phone number!");
+                        setNewName('');
+                        setNewNumber('');
+                    })
+            }
         } else {
             personService
                 .create(personObject)
