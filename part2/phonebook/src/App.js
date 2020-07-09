@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import Notification from './components/Notification';
 import personService from './services/persons';
 
 const App = () => {
@@ -9,12 +10,14 @@ const App = () => {
     const [newName, setNewName] = useState('');
     const [newNumber, setNewNumber] = useState('');
     const [filter, setFilter] = useState('');
+    const [notifMessage, setNotifMessage] = useState(null);
+    const [notifType, setNotifType] = useState('');
+
     useEffect(() => {
         personService
             .getAll()
-            .then(initialPersons => setPersons(initialPersons))
+            .then(initialPersons => setPersons(initialPersons));
     }, []);
-
 
     const handleNameChange = event => setNewName(event.target.value);
     const handleNumberChange = event => setNewNumber(event.target.value);
@@ -32,6 +35,11 @@ const App = () => {
     }
 
     const addPerson = event => {
+        if (!newName || !newNumber) {
+            window.alert("You cannot empty the form");
+            return;
+        }
+        
         event.preventDefault();
         const personObject = { name: newName, number: newNumber };
         const duplicateName = persons.some(person => person.name === newName);
@@ -59,9 +67,14 @@ const App = () => {
             personService
                 .create(personObject)
                 .then(returnedPerson => {
-                    setPersons(persons.concat(returnedPerson))
+                    setPersons(persons.concat(returnedPerson));
+                    setNotifMessage(`Added ${newName}`);
+                    setNotifType('success')
                     setNewName('');
                     setNewNumber('');
+                    setTimeout(() => {
+                        setNotifMessage(null);
+                    }, 5000);
                 })
         }
     };
@@ -73,6 +86,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={notifMessage} type={notifType} />
             <Filter filter={filter} handleChange={handleFilterChange} />
             <h2>add a new</h2>
             <PersonForm
