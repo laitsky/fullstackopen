@@ -10,16 +10,27 @@ const App = () => {
     const [newName, setNewName] = useState('');
     const [newNumber, setNewNumber] = useState('');
     const [filter, setFilter] = useState('');
-
     useEffect(() => {
         personService
             .getAll()
             .then(initialPersons => setPersons(initialPersons))
     }, []);
 
+
     const handleNameChange = event => setNewName(event.target.value);
     const handleNumberChange = event => setNewNumber(event.target.value);
     const handleFilterChange = event => setFilter(event.target.value);
+    const handleDeleteClick = (name, id) => () => {
+        const result = window.confirm(`Delete ${name}?`)
+        if (result) {
+            personService
+                .deletePerson(id)
+                .then(deleted => {
+                    setPersons(persons.filter(person => person !== id));
+                    window.alert(`Successfully deleted ${name}, status ${deleted}`)
+                });
+        }
+    }
 
     const addPerson = event => {
         event.preventDefault();
@@ -55,7 +66,7 @@ const App = () => {
                 newNumber={newNumber} handleNumberChange={handleNumberChange}
             />
             <h2>Numbers</h2>
-            <Persons personsToShow={personsToShow} />
+            <Persons personsToShow={personsToShow} handleDelete={handleDeleteClick} />
         </div>
     )
 }
