@@ -94,6 +94,15 @@ const App = () => {
                         setNotifMessage(null);
                     }, 5000);
                 })
+                .catch(err => {
+                    setNotifMessage(err.response.data.error);
+                    setNotifType('error');
+                    setTimeout(() => {
+                        setNotifMessage(null)
+                    }, 5000);
+                    setNewName('');
+                    setNewNumber('');
+                })
         }
     };
 
