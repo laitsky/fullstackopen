@@ -29,11 +29,14 @@ describe("blog list returns the correct amount of blogs posts in the JSON format
     
     test('corect amount of blog posts', async () => {
         const res = await api.get('/api/blogs')
-
         expect(res.body).toHaveLength(helper.initialBlog.length)
     })
 })
 
+test('unique identifier id is exist', async () => {
+    const res = await api.get('/api/blogs')
+    expect(res.body[0].id).toBeDefined();
+})
 afterAll(() => {
     mongoose.connection.close()
 })
