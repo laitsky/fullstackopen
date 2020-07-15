@@ -37,6 +37,23 @@ test('unique identifier id is exist', async () => {
     const res = await api.get('/api/blogs')
     expect(res.body[0].id).toBeDefined();
 })
+
+test('HTTP POST request to /api/blogs is successful', async () => {
+    const newBlog = {
+        title: "Angular is cool, but React is cooler",
+        author: "Everyone",
+        url: "react-is-cool.com",
+        likes: 100,
+      }
+
+     await api
+        .post('/api/blogs')
+        .send(newBlog)
+
+    const res = await api.get('/api/blogs')
+    expect(res.body.length).toBe(helper.initialBlog.length + 1)
+    expect(res.body).toContainEqual(expect.objectContaining(newBlog))
+})
 afterAll(() => {
     mongoose.connection.close()
 })
