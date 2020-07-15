@@ -54,6 +54,17 @@ test('HTTP POST request to /api/blogs is successful', async () => {
     expect(res.body.length).toBe(helper.initialBlog.length + 1)
     expect(res.body).toContainEqual(expect.objectContaining(newBlog))
 })
+
+test('if like property is missing, default the value to 0', async () => {
+    const newBlog = {
+        title: "Vue is cool, but React is cooler",
+        author: "Everyone",
+        url: "angular-is-cool.com",
+      }
+
+    const blog = await api.post('/api/blogs').send(newBlog)
+    expect(blog.body).toHaveProperty("likes", 0)
+})
 afterAll(() => {
     mongoose.connection.close()
 })
