@@ -1,5 +1,3 @@
-const Blog = require("../models/blog");
-
 const initialBlog = [
   {
     title: "React patterns",
@@ -22,4 +20,21 @@ const initialBlog = [
   },
 ];
 
-module.exports = {initialBlog}
+const initialUser = [
+  {
+    username: "Username 1",
+    name: "Name 1",
+    password: "pwpwd1",
+  },
+  {
+    username: "Username 2",
+    name: "Name 2",
+    password: "pwpwd2",
+  },
+  {
+    username: "Username 3",
+    name: "Name 3",
+    password: "pwpwd3",
+  },
+];
+module.exports = { initialBlog, initialUser };
