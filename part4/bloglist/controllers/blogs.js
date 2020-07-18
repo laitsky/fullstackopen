@@ -8,35 +8,26 @@ blogsRouter.get("/", async (request, response) => {
 });
 
 blogsRouter.post("/", async (request, response) => {
-  const user = await User.findById(request.body.userId)
+  const body = request.body
 
+  
   if (!request.body.title && !request.body.url) {
     return response.status(400).end();
   }
+  
+  const user = await User.findById(body.userId)
+  const blog = new Blog({
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes || 0,
+    user: user.id
+  })
 
-  if (!request.body.likes) {
-    const blog = new Blog({
-      title: request.body.title,
-      author: request.body.author,
-      url: request.body.url,
-      likes: 0,
-      user: user._id
-    });
-    const result = await blog.save();
-    user.blogs = user.blogs.concat(result._id)
-    return response.status(201).json(result);
-  } else {
-    const blog = new Blog({
-      title: request.body.title,
-      author: request.body.author,
-      url: request.body.url,
-      likes: request.body.likes,
-      user: user._id
-    })
-    const result = await blog.save();
-    user.blogs = user.blogs.concat(result._id)
-    return response.status(201).json(result);
-  }
+  const result = await blog.save()
+  user.blogs = user.blogs.concat(result.id)
+  await user.save()
+  return response.status(201).json(result);
 });
 
 blogsRouter.delete("/:id", async (req, res) => {
