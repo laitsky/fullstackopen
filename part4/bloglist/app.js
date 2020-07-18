@@ -14,6 +14,7 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology
     .then(() => logger.info('connected to MongoDB'))
     .catch(err => logger.error(err.message));
 
+app.use(middleware.tokenExtractor)
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
