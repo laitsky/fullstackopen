@@ -5,9 +5,9 @@ const LoginForm = (props) => (
         <h1>log in to application</h1>
         {
             <div style={{color: 'red'}}>
-                {props.warning}
+                {props.warning} <br />
             </div>
-        } <br />
+        } 
         username 
         <input
             type="text"
